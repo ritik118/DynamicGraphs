@@ -10,22 +10,30 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/print','QuestionController@index');
-Route::get('/printradio','QuestioningController@index');
-Route::get('/jj', 'QuestionController@search');
-Route::get('/radio','QuestioningController@search');
-Route::get('/comment','QuestioningController@store');
 Route::get('/form', function () {
     return view('form');
 });
+Route::get('/print','QuestionController@index');
+Route::get('/jj', 'QuestionController@search');
+
+Route::get('/printradio','QuestioningController@index');
+Route::get('/radio','QuestioningController@search');
+Route::get('/comment','QuestioningController@store');
+Route::get('/getid','QuestioningController@getId');
+Route::get('/radiocom','QuestioningController@searchcomment');
+
+
 Route::get('/json','OptionController@store');
-Route::get('/questiontable', 'QuestioningController@searchnew');
 Route::get('/optiontable', 'OptionController@search');
+
+
 Route::get('/answer', 'AnswerController@store');
+
+Route::get('/postcomment','commentController@store');
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+

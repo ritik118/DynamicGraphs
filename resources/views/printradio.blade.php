@@ -23,7 +23,7 @@
 
     
     function drawChart(){
-      
+      $('#alert').addClass("d-none");
       var e = document.getElementById("graph");
       var b = e.options[e.selectedIndex].value;
 
@@ -45,6 +45,17 @@
             $('#spin').addClass('d-none');
           }
           }).responseText;
+      var jsoncomment = $.ajax({
+          type:'GET',
+          url: "/radiocom",
+          data: {
+            ac:strUser,
+          },
+          async:false,
+          }).responseText;
+         var obj=JSON.parse(jsoncomment);
+         var comment=obj['comment'];
+         document.getElementById("comment").value=comment;
       var data = new google.visualization.DataTable(jsonData);
 
       var options = {
@@ -75,6 +86,34 @@
     }
     }
 
+
+    function saveComment(){
+      var choice = document.getElementById("testbox");
+      var strUser = choice.options[choice.selectedIndex].value;
+      var comment=document.getElementById("comment").value;
+      console.log(strUser,comment);
+     var jsonid = $.ajax({
+        type:'GET',
+        url:'/getid',
+        data:{
+          choices:strUser,
+        },
+        async:false,
+      }).responseText;
+      var obj=JSON.parse(jsonid);
+      var id=obj[0]['id'];
+      $.ajax({
+        type:'GET',
+        url:'/postcomment',
+        data:{
+          comments:comment,
+          choices:id,
+        },
+        async:false,
+      });
+      $('#alert').removeClass("d-none");
+    }
+
     
     
  </script>
@@ -82,10 +121,21 @@
     </head>
 
     <body>
+      <div class="alert alert-primary d-none" role="alert" id="alert">
+  Comment is saved in the database successfully !!!!
+</div>
        <div class="spinner-border d-none" id="spin"></div>
         <div id="chart_div" style="width: 100%;height:300px;"></div>
        
-
+        
+    <div class="card mb-1">
+  <h5 class="card-header">Write your Comment</h5>
+  
+    <textarea rows="4" style="width: 100%;border-width:0px" id="comment">
+      {{$comment[0]->comment}}
+    </textarea>
+</div>
+<button class="btn btn-primary mb-2" onclick="saveComment();">Save Comment</button></br>
          <label for="testbox">Select a parameter to create graph</label>
   <div class="row">
     <div class="col-md-7 text-center">

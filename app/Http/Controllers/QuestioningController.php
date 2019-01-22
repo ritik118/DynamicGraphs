@@ -10,9 +10,9 @@ class QuestioningController extends Controller
 
 	public function index(){
     	 $labels=Questioning::all('label');
+    	 $comment=Questioning::find(1)->comments()->get();
     	 
-    	 
-    	return View('printradio')->with('label',$labels);
+    	return View('printradio')->with('label',$labels)->with('comment',$comment);
 	}
 
 	public function store(){
@@ -40,10 +40,25 @@ class QuestioningController extends Controller
 // 		];
 // 		Questioning::create($data);
 // 		}
-		
-		
+
+
+
+
+ 	}
+ 	public function getId(Request $request){
+ 		$choice=$request->choices;
+ 		$choices=Questioning::select('id')->where('label','=',$choice)->get();
+ 		return response()->json($choices);
  	}
 
+ 	public function searchcomment(Request $request){
+ 		$a=$request->ac;
+ 		$ques_idd=Questioning::select('id')->where('label','=',$a)->get();
+ 		
+ 		$comment=Questioning::find($ques_idd[0]->id)->comments;
+ 		
+ 		return response()->json($comment);
+ 	}
 
 
  	public function search(Request $request){
@@ -97,11 +112,5 @@ class QuestioningController extends Controller
 
  	}
 
- 	public function searchnew(){
- 		$questions=Questioning::all();
-        
-
-        return View('questiontable')->with('allquestion',$questions);
- 	}
 
 }

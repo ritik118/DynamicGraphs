@@ -6,7 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Questioning extends Model
 {
-	public $timestamps = false;
+    public $timestamps = false;
+     public function comments()
+    {
+        return $this->hasOne('App\Comment','ques_id');
+    }
+	
    protected $fillable = ['label','name'];
 
     public function options()
@@ -17,4 +22,5 @@ class Questioning extends Model
     {
         return $this->hasMany('App\Answer','option_id');
     }
+   
 }

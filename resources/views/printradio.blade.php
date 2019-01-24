@@ -8,16 +8,11 @@
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js">
         </script>
-    
-
-   
-
 
            <script type="text/javascript">
     
     // Load the Visualization API and the piechart package.
     google.charts.load('current', {'packages':['corechart']});
-      google.charts.load('current', {'packages':['table']});
     // Set a callback to run when the Google Visualization API is loaded.
    google.charts.setOnLoadCallback(drawChart);
 
@@ -30,6 +25,7 @@
       var choice = document.getElementById("testbox");
       var strUser = choice.options[choice.selectedIndex].value;
       
+      var comment=document.getElementById("comment").value;
        
       var jsonData = $.ajax({
           type:'GET',
@@ -60,30 +56,32 @@
 
       var options = {
         title:strUser,
+        hAxis: {title:"comment :"+ comment},
         legend:{position:'right'},
         chartArea:{width:'90%',height:'60%'},
         is3D:true
       };
       if(b== "piechart"){
         var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-      chart.draw(data,options);
+        
       }
-      else if (b== "tablechart") {
-      var chart = new google.visualization.Table(document.getElementById('chart_div'));
-      chart.draw(data,options);
-    }
     else if(b== "linechart") {
       var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-      chart.draw(data,options);
+      
     }
     else if (b== "barchart") {
       var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
-      chart.draw(data,options);
     }
     else {
       var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-      chart.draw(data,options);
     }
+    google.visualization.events.addListener(chart, 'ready', function() {
+               
+                document.getElementById('png').innerHTML = '<button type="button" class="btn btn-primary"><a href="' + chart.getImageURI() + '" download="'+strUser+'.png" style="color:white;text-decoration:none;">Download the chart</a></button>';
+
+        });
+    chart.draw(data,options);
+
     }
 
 
@@ -124,17 +122,29 @@
       <div class="alert alert-primary d-none" role="alert" id="alert">
   Comment is saved in the database successfully !!!!
 </div>
-       <div class="spinner-border d-none" id="spin"></div>
-        <div id="chart_div" style="width: 100%;height:300px;"></div>
        
-        
-    <div class="card mb-1">
+
+       <div class="spinner-border d-none" id="spin"></div>
+       
+       <div class="row">
+         <div class="col-md-10" id="print_chart">
+            <div id="chart_div" style="width: 100%;height:340px;">
+              
+            </div>
+            <div class="card mb-1">
   <h5 class="card-header">Write your Comment</h5>
   
-    <textarea rows="4" style="width: 100%;border-width:0px" id="comment">
+    <textarea rows="4" style="width: 100%;border-width:0px; resize: none;" id="comment" >
       {{$comment[0]->comment}}
     </textarea>
 </div>
+         </div>
+         <div class="col-md-2 mt-5">
+           <div id="png"></div>
+         </div>
+       </div>
+        
+    
 <button class="btn btn-primary mb-2" onclick="saveComment();">Save Comment</button></br>
          <label for="testbox">Select a parameter to create graph</label>
   <div class="row">
@@ -156,20 +166,11 @@
             <option value="linechart">linechart</option>
             <option value="barchart">barchart</option>
             <option value="columnchart">columnchart</option>
-            <option value="tablechart">tablechart</option>
             
     </select>
   </div>
   <div class="col-md-1"></div>
 </div>
-
-
-       
-         
-     
-
-    
-
     </body>
 
 

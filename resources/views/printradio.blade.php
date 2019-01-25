@@ -8,8 +8,17 @@
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js">
         </script>
+        <script src="{{asset('js/html2canvas.min.js')}}"></script>
+        <style type="text/css">
 
+          canvas {
+            max-width: 100%;
+            max-height: 100%;
+          }
+
+        </style>
            <script type="text/javascript">
+
     
     // Load the Visualization API and the piechart package.
     google.charts.load('current', {'packages':['corechart']});
@@ -56,7 +65,6 @@
 
       var options = {
         title:strUser,
-        hAxis: {title:"comment :"+ comment},
         legend:{position:'right'},
         chartArea:{width:'90%',height:'60%'},
         is3D:true
@@ -75,12 +83,18 @@
     else {
       var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
     }
-    google.visualization.events.addListener(chart, 'ready', function() {
-               
-                document.getElementById('png').innerHTML = '<button type="button" class="btn btn-primary"><a href="' + chart.getImageURI() + '" download="'+strUser+'.png" style="color:white;text-decoration:none;">Download the chart</a></button>';
-
-        });
     chart.draw(data,options);
+
+    }
+
+    function getScreenshot(){
+      var choice = document.getElementById("testbox");
+      var strUser = choice.options[choice.selectedIndex].value;
+      html2canvas(document.getElementById("print_chart")).then(function(canvas){
+          $('#blank').attr('href',canvas.toDataURL("image/png"));
+          $('#blank').attr('download',strUser+".png");
+          $('#blank')[0].click();
+      });
 
     }
 
@@ -127,25 +141,30 @@
        <div class="spinner-border d-none" id="spin"></div>
        
        <div class="row">
-         <div class="col-md-10" id="print_chart">
+         <div class="col-md-10">
+          <div id="print_chart">
             <div id="chart_div" style="width: 100%;height:340px;">
               
             </div>
             <div class="card mb-1">
-  <h5 class="card-header">Write your Comment</h5>
+                <h5 class="card-header"> Comment</h5>
   
-    <textarea rows="4" style="width: 100%;border-width:0px; resize: none;" id="comment" >
-      {{$comment[0]->comment}}
-    </textarea>
-</div>
+                  <textarea rows="4" style="width: 100%;border-width:0px; resize: none;font-weight: bold;" id="comment" >
+                    {{$comment[0]->comment}}
+                  </textarea>
+           </div>
+              </div>
+              <button class="btn btn-primary mb-3" onclick="saveComment();">Save Comment</button></br>
          </div>
+
          <div class="col-md-2 mt-5">
-           <div id="png"></div>
+           <a href="javascript:getScreenshot();" class="btn btn-outline-primary">Download the graph</a>
+           <a href="" id="blank"></a>
          </div>
        </div>
         
     
-<button class="btn btn-primary mb-2" onclick="saveComment();">Save Comment</button></br>
+
          <label for="testbox">Select a parameter to create graph</label>
   <div class="row">
     <div class="col-md-7 text-center">
@@ -172,6 +191,4 @@
   <div class="col-md-1"></div>
 </div>
     </body>
-
-
     </html>

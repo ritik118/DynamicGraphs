@@ -13,7 +13,7 @@ class AnswerController extends Controller
     public function store(){
     	$questioning=new Questioning();
     	$question=$questioning->all();
-    	for($i=11;$i<=100;$i++){
+    	for($i=1;$i<=1000;$i++){
     		foreach ($question as $row){
     			$q=$row['id'];
     			$options=new Option();

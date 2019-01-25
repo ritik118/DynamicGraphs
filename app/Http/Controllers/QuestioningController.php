@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
  use App\Questioning;
-use App\Answer;
+ use App\Answer;
 class QuestioningController extends Controller
 {
 
@@ -63,20 +63,19 @@ class QuestioningController extends Controller
 
  	public function search(Request $request){
  		$a=$request->ac;
- 		$question=new Questioning;
- 		$ques_idd=Questioning::select('id')->where('label','=',$a)->get();
+ 		$ques_idd=Questioning::select('*')->where('label','=',$a)->get();
  		$ques_id=$ques_idd[0]['id'];
  		$options = Questioning::find($ques_id)->options;
  		
  		$count=array();
- 		foreach ($options as $op) {
- 			$opid=$op->id;
- 			
+ 		 foreach ($options as $op) {
+ 		$opid=$op->id;
  			$count[] = Answer::where('option_id','=',$opid)->count();
- 			//$count[] = Questioning::find($opid)->answers->count();
+ 			
+ 			
+ 			//$count[] = Questioning::find($ques_id)->answers->get();
+ 			
  		}
- 		
- 		
  		$rows=array();
 		$table=array();
 		$table['cols']=array(

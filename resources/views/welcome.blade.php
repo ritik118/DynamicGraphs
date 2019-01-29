@@ -85,7 +85,7 @@
                 </div>
 
                 <div class="links">
-                    <a href="/print">Print</a>
+                    <a href="/printradio">Print</a>
                     <a href="/form">forms</a>
                     <a href="https://laravel-news.com">News</a>
                     <a href="https://nova.laravel.com">Nova</a>
